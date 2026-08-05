@@ -1,32 +1,32 @@
-#include "mod/MyMod.h"
+#include "mod/BPS.h"
 
 #include "ll/api/mod/RegisterHelper.h"
 
-namespace my_mod {
+namespace bps {
 
-MyMod& MyMod::getInstance() {
-    static MyMod instance;
+BPS& BPS::getInstance() {
+    static BPS instance;
     return instance;
 }
 
-bool MyMod::load() {
+bool BPS::load() {
     getSelf().getLogger().debug("Loading...");
     // Code for loading the mod goes here.
     return true;
 }
 
-bool MyMod::enable() {
+bool BPS::enable() {
     getSelf().getLogger().debug("Enabling...");
     // Code for enabling the mod goes here.
     return true;
 }
 
-bool MyMod::disable() {
+bool BPS::disable() {
     getSelf().getLogger().debug("Disabling...");
     // Code for disabling the mod goes here.
     return true;
 }
 
-} // namespace my_mod
+} // namespace bps
 
-LL_REGISTER_MOD(my_mod::MyMod, my_mod::MyMod::getInstance());
+LL_REGISTER_MOD(bps::BPS, bps::BPS::getInstance());
