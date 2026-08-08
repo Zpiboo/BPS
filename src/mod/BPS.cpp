@@ -6,12 +6,14 @@
 #include "ll/api/event/command/ClientCommandRegisterEvent.h"
 #include "ll/api/event/render/UIRenderEvent.h"
 #include "ll/api/mod/RegisterHelper.h"
+#include "mc/client/game/ClientInstance.h"
 #include "mc/client/game/IClientInstance.h"
-#include "mc/client/gui/CaretMeasureData.h"
-#include "mc/client/gui/TextMeasureData.h"
-#include "mc/deps/core/math/Color.h"
-#include "mc/deps/input/RectangleArea.h"
-#include "mc/server/commands/CommandFlag.h"
+#include "mc/world/actor/Actor.h"
+#include "mod/label/Label.h"
+#include "mod/label/LabelRegistry.h"
+#include <array>
+#include <memory>
+#include <string>
 
 namespace bps {
 
@@ -34,13 +36,13 @@ bool BPS::enable() {
     auto& bus = EventBus::getInstance();
 
     bus.emplaceListener<command::ClientCommandRegisterEvent>(
-        [&logger](command::ClientCommandRegisterEvent&) {
+        [](command::ClientCommandRegisterEvent&) {
 
             auto& command = ll::command::CommandRegistrar::getInstance(true)
                 .getOrCreateCommand("bps", "Do you deserve the legacy of DinoPK Optimized? Do you have what it takes?");
             
             command.overload().execute(
-                [&logger](CommandOrigin const& origin, CommandOutput& output) {
+                [](CommandOrigin const& origin, CommandOutput& output) {
                     auto* entity = origin.getEntity();
 
                     if (entity == nullptr || !entity->isPlayer()) {
@@ -50,7 +52,7 @@ bool BPS::enable() {
                         return;
                     }
 
-                    auto* player = static_cast<Player*>(entity);
+                    //auto* player = static_cast<Player*>(entity);
 
                     output.success("Expanded your consciousness by x10,000");
                 }
@@ -59,22 +61,25 @@ bool BPS::enable() {
     );
 
     bus.emplaceListener<render::BeforeUIRenderEvent>(
-        [&logger](render::BeforeUIRenderEvent& evt) {
+        [](render::BeforeUIRenderEvent& evt) {
             auto& ctx = evt.uiRenderContext();
+            if (!ctx.mClient.isInWorldAndNotShowingAnyMenuScreens()) return;
 
-            auto& mc = ctx.mClient;
-            if (!mc.isInWorldAndNotShowingAnyMenuScreens()) return;
-
-            auto& font = mc.getFontHandle().getFont();
-            RectangleArea rect(20, 50, 0, 0, true);
-            auto& color = mce::Color::CYAN();
-            auto alignment = ui::TextAlignment::Left;
-            TextMeasureData textData(1, 0, true, false, true, alignment);
-            CaretMeasureData caretData(0, false);
-
-            ctx.drawText(font, rect, std::string("human is unlimited"), color, 1.0, alignment, textData, caretData);
+            auto yawLabel = label::LabelRegistry::get("yaw");
+            yawLabel->render(ctx);
         }
     );
+
+    std::shared_ptr<label::Label> yawLabel = std::make_shared<label::Label>(
+        "Yaw",
+        [](::Actor* cameraActor) {
+            return std::to_string(cameraActor->getRotation().y);
+        },
+        "no",
+        std::array<int, 2> {0, 0},
+        true
+    );
+    label::LabelRegistry::put("yaw", yawLabel);
 
     return true;
 }
