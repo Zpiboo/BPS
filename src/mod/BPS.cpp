@@ -63,6 +63,8 @@ bool BPS::enable() {
             auto& ctx = evt.uiRenderContext();
 
             auto& mc = ctx.mClient;
+            if (!mc.isInWorldAndNotShowingAnyMenuScreens()) return;
+
             auto& font = mc.getFontHandle().getFont();
             RectangleArea rect(20, 50, 0, 0, true);
             auto& color = mce::Color::CYAN();
