@@ -4,7 +4,13 @@
 #include "ll/api/command/CommandRegistrar.h"
 #include "ll/api/event/EventBus.h"
 #include "ll/api/event/command/ClientCommandRegisterEvent.h"
+#include "ll/api/event/render/UIRenderEvent.h"
 #include "ll/api/mod/RegisterHelper.h"
+#include "mc/client/game/IClientInstance.h"
+#include "mc/client/gui/CaretMeasureData.h"
+#include "mc/client/gui/TextMeasureData.h"
+#include "mc/deps/core/math/Color.h"
+#include "mc/deps/input/RectangleArea.h"
 #include "mc/server/commands/CommandFlag.h"
 
 namespace bps {
@@ -49,6 +55,22 @@ bool BPS::enable() {
                     output.success("Expanded your consciousness by x10,000");
                 }
             );
+        }
+    );
+
+    bus.emplaceListener<render::BeforeUIRenderEvent>(
+        [&logger](render::BeforeUIRenderEvent& evt) {
+            auto& ctx = evt.uiRenderContext();
+
+            auto& mc = ctx.mClient;
+            auto& font = mc.getFontHandle().getFont();
+            RectangleArea rect(20, 50, 0, 0, true);
+            auto& color = mce::Color::CYAN();
+            auto alignment = ui::TextAlignment::Left;
+            TextMeasureData textData(1, 0, true, false, true, alignment);
+            CaretMeasureData caretData(0, false);
+
+            ctx.drawText(font, rect, std::string("human is unlimited"), color, 1.0, alignment, textData, caretData);
         }
     );
 
