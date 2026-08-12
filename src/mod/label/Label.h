@@ -12,7 +12,6 @@ public:
     Label(
         std::string_view prefix,
         std::function<std::string(::Actor*)> valueGetter,
-        std::string_view dummyValue,
         std::array<int, 2> pos,
         bool center
     );
@@ -24,7 +23,6 @@ public:
 private:
     std::string mPrefix;
     std::function<std::string(::Actor*)> mValueGetter;
-    std::string mDummyValue;
 
     label::LabelRect mRect;
 

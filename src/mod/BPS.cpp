@@ -75,7 +75,6 @@ bool BPS::enable() {
         [](::Actor* cameraActor) {
             return std::to_string(cameraActor->getRotation().y);
         },
-        "no",
         std::array<int, 2> {0, 0},
         true
     );

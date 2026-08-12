@@ -12,11 +12,10 @@ namespace bps::label {
 Label::Label(
     std::string_view prefix,
     std::function<std::string(::Actor*)> valueGetter,
-    std::string_view dummyValue,
     std::array<int, 2> pos,
     bool center
 )
-    : mPrefix(prefix), mValueGetter(valueGetter), mDummyValue(dummyValue),
+    : mPrefix(prefix), mValueGetter(valueGetter),
     mRect(pos[0], pos[1], 0, 0, center) {
 }
 
