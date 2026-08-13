@@ -27,7 +27,7 @@ void Label::render(MinecraftUIRenderContext& ctx) {
     auto& mc = ctx.mClient;
 
     ::Actor* cameraActor = mc.getCameraActor();
-    std::string text = mPrefix + ": " + getValue(cameraActor);
+    std::string text = "§b" + mPrefix + ": §f" + getValue(cameraActor);
 
     Font& font = mc.getFontHandle().getFont();
     // TODO: update/render pipeline to update this in a proper place
@@ -35,7 +35,7 @@ void Label::render(MinecraftUIRenderContext& ctx) {
     mRect.setH(font.getTextHeight(text, 1));
 
     auto& rect = mRect.getMcRect();
-    auto& color = mce::Color::CYAN();
+    auto& color = mce::Color::WHITE();
     auto alignment = ui::TextAlignment::Left;
     TextMeasureData textData(1, 0, true, false, true, alignment);
     CaretMeasureData caretData(0, false);
