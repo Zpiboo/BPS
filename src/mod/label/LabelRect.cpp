@@ -1,7 +1,6 @@
 #include "mod/label/LabelRect.h"
 #include "ll/api/service/TargetedBedrock.h"
 #include "mc/client/game/ClientInstance.h"
-#include "mc/deps/core/math/Vec2.h"
 #include "mc/deps/input/RectangleArea.h"    
 #include "mc/deps/renderer/ViewportInfo.h"
 

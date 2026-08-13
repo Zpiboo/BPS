@@ -65,8 +65,7 @@ bool BPS::enable() {
             auto& ctx = evt.uiRenderContext();
             if (!ctx.mClient.isInWorldAndNotShowingAnyMenuScreens()) return;
 
-            auto yawLabel = label::LabelRegistry::get("yaw");
-            yawLabel->render(ctx);
+            label::LabelRegistry::renderAll(ctx);
         }
     );
 

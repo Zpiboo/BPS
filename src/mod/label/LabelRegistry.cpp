@@ -17,4 +17,10 @@ bool LabelRegistry::exists(const std::string& id) {
     return mRegistry.contains(id);
 }
 
+void LabelRegistry::renderAll(MinecraftUIRenderContext& ctx) {
+    for (const auto& [id, label] : mRegistry) {
+        label->render(ctx);
+    }
+}
+
 }
