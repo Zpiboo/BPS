@@ -9,8 +9,10 @@
 #include "mc/client/game/ClientInstance.h"
 #include "mc/client/game/IClientInstance.h"
 #include "mc/world/actor/Actor.h"
+#include "mod/event/ClientTickEvent.h"
 #include "mod/label/Label.h"
 #include "mod/label/LabelRegistry.h"
+#include "mod/speedrun/SpeedrunTickListener.h"
 #include <array>
 #include <memory>
 #include <string>
@@ -66,6 +68,17 @@ bool BPS::enable() {
             if (!ctx.mClient.isInWorldAndNotShowingAnyMenuScreens()) return;
 
             label::LabelRegistry::renderAll(ctx);
+        }
+    );
+
+    bus.emplaceListener<event::ClientTickEvent>(
+        [](event::ClientTickEvent& evt) {
+            if (evt.phase() != event::ClientTickEvent::Phase::End) return;
+
+            ::Actor* cameraActor = evt.client().getCameraActor();
+            if (cameraActor) {
+                speedrun::SpeedrunTickListener::onTick(cameraActor);
+            }
         }
     );
 
