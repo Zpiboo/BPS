@@ -82,15 +82,23 @@ bool BPS::enable() {
         }
     );
 
-    std::shared_ptr<label::Label> yawLabel = std::make_shared<label::Label>(
-        "Yaw",
-        [](::Actor* cameraActor) {
-            return std::to_string(cameraActor->getRotation().y);
+    label::LabelRegistry::put("groundtime", std::make_shared<label::Label>(
+        "Groundtime",
+        [](::Actor*) {
+            return std::to_string(speedrun::SpeedrunTickListener::getGroundtime());
         },
-        std::array<int, 2> {0, 0},
+        std::array<int, 2> {10, 10},
+        false
+    ));
+
+    label::LabelRegistry::put("runTicks", std::make_shared<label::Label>(
+        "Run Ticks",
+        [](::Actor*) {
+            return std::to_string(speedrun::SpeedrunTickListener::getRunTicks());
+        },
+        std::array<int, 2> {0, -15},
         true
-    );
-    label::LabelRegistry::put("yaw", yawLabel);
+    ));
 
     return true;
 }
