@@ -6,10 +6,11 @@
 #include "ll/api/event/command/ClientCommandRegisterEvent.h"
 #include "ll/api/event/render/UIRenderEvent.h"
 #include "ll/api/mod/RegisterHelper.h"
+#include "ll/api/service/TargetedBedrock.h"
 #include "mc/client/game/ClientInstance.h"
 #include "mc/client/game/IClientInstance.h"
 #include "mc/world/actor/Actor.h"
-#include "mod/event/ClientTickEvent.h"
+#include "mod/event/ClientLevelTickEndEvent.h"
 #include "mod/label/Label.h"
 #include "mod/label/LabelRegistry.h"
 #include "mod/speedrun/SpeedrunTickListener.h"
@@ -71,11 +72,9 @@ bool BPS::enable() {
         }
     );
 
-    bus.emplaceListener<event::ClientTickEvent>(
-        [](event::ClientTickEvent& evt) {
-            if (evt.phase() != event::ClientTickEvent::Phase::End) return;
-
-            ::Actor* cameraActor = evt.client().getCameraActor();
+    bus.emplaceListener<event::ClientLevelTickEndEvent>(
+        [](event::ClientLevelTickEndEvent&) {
+            ::Actor* cameraActor = ll::service::getClientInstance()->getCameraActor();
             if (cameraActor) {
                 speedrun::SpeedrunTickListener::onTick(cameraActor);
             }
